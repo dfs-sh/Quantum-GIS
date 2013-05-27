@@ -84,7 +84,6 @@
 #include <dlfcn.h>
 #endif
 
-
 static const char * const ident_ = "$Id$";
 
 // typedef for the QgsDataProvider class factory
@@ -737,20 +736,6 @@ void QgsVectorLayer::drawRendererV2( QgsRenderContext& rendererContext, bool lab
         break;
       }
 
-#ifndef Q_WS_MAC //MH: disable this on Mac for now to avoid problems with resizing
-      if ( mUpdateThreshold > 0 && 0 == featureCount % mUpdateThreshold )
-      {
-        emit screenUpdateRequested();
-        // emit drawingProgress( featureCount, totalFeatures );
-        qApp->processEvents();
-      }
-      else if ( featureCount % 1000 == 0 )
-      {
-        // emit drawingProgress( featureCount, totalFeatures );
-        qApp->processEvents();
-      }
-#endif //Q_WS_MAC
-
       bool sel = mSelectedFeatureIds.contains( fet.id() );
       bool drawMarker = ( mEditable && ( !vertexMarkerOnlyForSelection || sel ) );
 
@@ -984,7 +969,7 @@ bool QgsVectorLayer::draw( QgsRenderContext& rendererContext )
     //register label and diagram layer to the labeling engine
     prepareLabelingAndDiagrams( rendererContext, attributes, labeling );
 
-    select( attributes, rendererContext.extent() );
+    select( attributes);
 
     if ( mRendererV2->usingSymbolLevels() )
       drawRendererV2Levels( rendererContext, labeling );

@@ -18,8 +18,6 @@
 #include <QDomDocument>
 #include <QPolygonF>
 
-
-
 unsigned char* QgsFeatureRendererV2::_getPoint( QPointF& pt, QgsRenderContext& context, unsigned char* wkb )
 {
   wkb++; // jump over endian info
@@ -144,9 +142,6 @@ unsigned char* QgsFeatureRendererV2::_getPolygon( QPolygonF& pts, QList<QPolygon
     if ( nPoints < 1 )
       continue;
 
-    //clip close to view extent
-    QgsClipper::trimPolygon( poly, clipRect );
-
     //transform the QPolygonF to screen coordinates
     for ( int i = 0; i < poly.size(); ++i )
     {
@@ -238,7 +233,6 @@ void QgsFeatureRendererV2::renderFeature( QgsFeature& feature, QgsRenderContext&
       QList<QPolygonF> holes;
       _getPolygon( pts, holes, context, geom->asWkb() );
       (( QgsFillSymbolV2* )symbol )->renderPolygon( pts, ( holes.count() ? &holes : NULL ), context, layer, selected );
-
       if ( drawVertexMarker )
         renderVertexMarkerPolygon( pts, ( holes.count() ? &holes : NULL ), context );
     }
